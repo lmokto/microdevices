@@ -1,24 +1,23 @@
-# noinspection PyPackageRequirements
-"""
-    Primer Sensor
-        1. una funcion para emitir datos fake entre n and x
-        https://docs.scipy.org/doc/numpy/reference/routines.random.html
-
-        2. creemos una funcion que muestre los datos en consola cada un intervalo
-        3. realicemos que celery ejecute de manera asyncrona la funcion del punto 2
-"""
-
-import numpy as np
+# import time
+import redis
+#
+redis_db = redis.StrictRedis(host="localhost", port=6379, db=0)
 
 
-def generate_random(low, high, size):
-    """
-    :param low: int 10
-    :param high: int 20
-    :param size: int 1
-    :return: 20
-    """
-    return np.random.randint(
-        low=low, high=high, size=size
-    )[0]
+from datetime import datetime
+import asyncio
+import datetime
 
+
+async def display_date():
+    loop = asyncio.get_running_loop()
+    end_time = loop.time() + 5.0
+    while True:
+        print(datetime.datetime.now())
+        if (loop.time() + 1.0) >= end_time:
+            break
+        await asyncio.sleep(1)
+
+
+if __name__ == "__main__":
+    asyncio.run(display_date())
