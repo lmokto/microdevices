@@ -5,6 +5,10 @@ from shapely.geometry import Polygon
 
 
 class Mock(object):
+    """
+        mock = Mock(**{'type':'int','low': 20, 'high': 40, 'size': 1})
+        mock.get()
+    """
     low = 0
     size = 0
     high = 0
@@ -26,6 +30,7 @@ class Mock(object):
         :param size:
         """
         if config.get('type') == 'int':
+            self.randint = True
             self.set_params(config.get('low', 10), config.get('high', 20), config.get('size', 1))
         elif config.get('type') == 'coords':
             self.polygon = self.set_coords(config.get('coords', None))

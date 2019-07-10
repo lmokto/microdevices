@@ -95,18 +95,3 @@ class Devices(object):
                 del self.sensors[index]
             return True
         return False
-
-
-def sensor_factory():
-    # Creamos los sensores
-    voltage = Sensor(name='voltage', freq=2, dynamic=True)
-    consumption = Sensor(name='consumption', freq=4, dynamic=True, **{'low': 20, 'high': 40, 'size': 1})
-
-    # Instanciamos los sensores al Dispositivo
-    dev = Devices()
-    dev.add(consumption)
-    dev.add(voltage)
-
-    # Emitimos datos segun sensor
-    dev.emit('consumption')
-    dev.emit('voltage')

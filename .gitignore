@@ -1,5 +1,6 @@
-
 devices/__pycache__/
 microdevices/libs/__pycache__/
 .idea/
 .idea/workspace.xml
+.directory
+config.ini
