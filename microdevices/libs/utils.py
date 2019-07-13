@@ -29,7 +29,14 @@ def instance_config(filename):
 
 
 async def display_date():
-    #     asyncio.run(display_date())
+    """
+        emite datos cada 1 segundo durante 5 segundos.
+        In [5]: asyncio.run(display_date()                                                                                         
+        2019-07-12 18:24:17.763086
+        2019-07-12 18:24:18.763789
+        2019-07-12 18:24:19.765581
+        ...
+    """
     loop = asyncio.get_running_loop()
     end_time = loop.time() + 5.0
     while True:
@@ -37,3 +44,5 @@ async def display_date():
         if (loop.time() + 1.0) >= end_time:
             break
         await asyncio.sleep(1)
+
+

@@ -4,3 +4,4 @@ microdevices/libs/__pycache__/
 .idea/workspace.xml
 .directory
 config.ini
+__pycache__

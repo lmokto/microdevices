@@ -3,16 +3,18 @@ from celery import Celery
 
 
 app = Celery('microdevices',
-             broker='pyamqp://guest@172.17.0.2//',
-             backend='rpc://',
-             include=['microdevices.libs.tasks'])
+            	broker='redis://localhost:6379/0',
+            	backend='rpc://',
+            	include=[
+            		'microdevices.factory.dev1', 
+            		'microdevices.factory.dev2'
+            	]
+            )
 
 # Optional configuration, see the application user guide.
 app.conf.update(
     result_expires=3600,
 )
-
-
 
 app.conf.timezone = 'UTC'
 

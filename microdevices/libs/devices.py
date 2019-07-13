@@ -1,54 +1,33 @@
-from mock import Mock
+from .mock import Mock
+from numpy.random import randint
 
 
-class Sensor(object):
-    data = None
-    freq = 0
-    dynamic = False
-    random = None
+class Devices(object):
 
-    def __init__(self, name, data=None, freq=0, dynamic=False, **config):
+    def __init__(self, name=None, lat=None, lng=None):
         """
         :param data:
         :param frequency:
         """
         self.name = name
-        if dynamic:
-            self.dynamic = True
-            self.random = Mock(**config)
-        self.set_frequency(freq)
-        self.set_data(data)
-
-    def set_data(self, data):
-        """
-        :param data:
-        :return:
-        """
-        self.data = data
-
-    def get(self):
-        if self.dynamic:
-            return self.random.generate()
-        return self.data
-
-    def set_frequency(self, frequency=0):
-        """
-        :param frequency:
-        :return:
-        """
-        if frequency:
-            self.freq = frequency
-        return self.freq
-
-
-class Devices(object):
-
-    def __init__(self):
-        """
-        :param data:
-        :param frequency:
-        """
+        self.lat = lat
+        self.lng = lng
+        self.__id = int(''.join([str(n) for n in randint(0, 10, 10) if n]))
         self.sensors = []
+
+    def get_id(self):
+
+        return self.__id
+
+    def get_fullname(self):
+        id_name = '{name} -- {id}'.format(name=self.name, id=self.__id)
+        return id_name
+
+    def get_coords(self):
+        return {
+            'latitud': self.lat,
+            'longitud': self.lng
+        }
 
     def sensor(self, _id):
         """

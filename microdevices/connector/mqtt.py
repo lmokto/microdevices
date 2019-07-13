@@ -124,4 +124,3 @@ def on_message(client, userdata, message):
 
 def on_publish(client, userdata, result):
     print("data published \n")
-
