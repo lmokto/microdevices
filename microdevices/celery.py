@@ -6,7 +6,7 @@ app = Celery('microdevices',
             	broker='redis://localhost:6379/0',
             	backend='rpc://',
             	include=[
-            		'microdevices.factory.dev1', 
+            		'microdevices.factory.dev1',
             		'microdevices.factory.dev2'
             	]
             )

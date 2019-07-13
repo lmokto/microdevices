@@ -1,5 +1,5 @@
 from .mock import Mock
-from numpy.random import randint
+
 
 class Sensor(object):
     data = None

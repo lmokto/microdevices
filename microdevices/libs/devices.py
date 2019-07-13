@@ -1,4 +1,3 @@
-from .mock import Mock
 from numpy.random import randint
 
 
@@ -16,7 +15,6 @@ class Devices(object):
         self.sensors = []
 
     def get_id(self):
-
         return self.__id
 
     def get_fullname(self):

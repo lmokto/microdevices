@@ -2,7 +2,7 @@
 # microdevices
 celery -A microdevices.celery worker -l info --queues=celery_periodic
 ****
-celery -A microdevices beat -l info
+celery -A microdevices worker -l info
 
 $ mkdir -p /var/run/celery
 $ mkdir -p /var/log/celery

@@ -5,3 +5,5 @@ microdevices/libs/__pycache__/
 .directory
 config.ini
 __pycache__
+.idea/modules.xml
+microdevices.db
