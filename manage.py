@@ -4,6 +4,12 @@ import sys
 from microdevices.libs.utils import (
     handler_registry, fnc_active, fnc_handler, fnc_change, init_database
 )
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+
+engine = create_engine('sqlite:///microdevices.db', echo=True)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 """
 	Creamos una funciones templates ( que reciban los parametros enviado por consola)
@@ -19,7 +25,7 @@ from microdevices.libs.utils import (
 				3. api (aws o otras plataformas)
 
 			C. Cada funcion debe ser registrada como un task en Celery (Done)
-		
+
 			1.
             python manage.py registry --device=<factory.dev1.registry>
             	Aqui registramos un device y sus tareas asociadas
@@ -45,9 +51,19 @@ from microdevices.libs.utils import (
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
+
+# Create a template for active devices subcommand
+# python manage.py start_db
+
+parser_active = subparsers.add_parser('start_db', help='start database tables')
+parser_active.set_defaults(func=init_database)
+
 # Create a template for registry devices subcommand
-parser_registry = subparsers.add_parser('registry', help='It provide an interface to register devices.')
-parser_registry.add_argument('--locate', help='relative path registry dict')
+# python manage.py factory --registry='factory.dev1.registry'
+# python manage.py factory --registry='factory.dev2.registry'
+
+parser_registry = subparsers.add_parser('factory', help='It provide an interface to register devices.')
+parser_registry.add_argument('--registry', help='relative path registry dict')
 parser_registry.set_defaults(func=handler_registry) # change
 
 # Create a template for handler devices subcommand
@@ -63,10 +79,6 @@ parser_change.add_argument('--task', help='task id celery')
 parser_change.set_defaults(func=fnc_change)
 
 # Create a template for active devices subcommand
-parser_active = subparsers.add_parser('start_db', help='start database tables')
-parser_active.set_defaults(func=init_database)
-
-# Create a template for active devices subcommand
 parser_active = subparsers.add_parser('active', help='show all tasks or devices active')
 parser_active.add_argument('--type', help='select the type task|dev')
 parser_active.set_defaults(func=fnc_active)
@@ -77,4 +89,4 @@ if len(sys.argv) <= 1:
 
 options = parser.parse_args()
 # Run the appropriate function (in this case showtop20 or listapps)
-options.func(options)
+options.func(options, session)

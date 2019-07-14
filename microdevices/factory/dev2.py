@@ -53,11 +53,11 @@ registry = [{
     'id': dev.get_id(),
     'class': dev,
     'tasks': [{
-        'name': dev2_task_consumption,
+        'fnc': dev2_task_consumption,
         'interval': WAIT_TASK_CONS,
         'status':'inactive'
     }, {
-        'name': dev2_task_voltage,
+        'fnc': dev2_task_voltage,
         'interval': WAIT_TASK_VOLT,
         'status':'inactive'
     }]
