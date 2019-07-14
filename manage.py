@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from microdevices.libs.utils import (
-    handler_registry, fnc_active, fnc_handler, fnc_change, init_database
+    handler_registry, fnc_handler, fnc_change, init_database, handler_inspect, handler_launch
 )
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -38,8 +38,12 @@ session = Session()
             python manage.py inspect --device=<dev1> (nos da la info de todas las tareas registradas de un device)
 
             3.
-            python manage.py handler --action=<start|stop|pause> --task=<id>
+            python manage.py launch --action=<start|stop|pause> --task=<id>
             	Aqui debemos poder iniciar las tasks, detenerlas o pausarlas, al iniciarla debemos almacenar
+            	1. verifciar que la tarea esta inactiva y registrada
+            	2. verificar que podemos ejecutar la tarea (porque esta en el modulo)
+            	3. verificar que la tarea esta en la pila de ejecucion de celery
+            	resultado de ejecutar tarea, nos da un id que debemos guardar
             	su id de celery y cambiar su status, en la tabla
             	    1. iniciamos una tarea especifcia del device
             4.
@@ -66,11 +70,18 @@ parser_registry = subparsers.add_parser('factory', help='It provide an interface
 parser_registry.add_argument('--registry', help='relative path registry dict')
 parser_registry.set_defaults(func=handler_registry) # change
 
+# python manage.py inspect --device='dev2'
+# python manage.py inspect --device='dev1'
+
+parser_registry = subparsers.add_parser('inspect', help='It provide an interface to inspect devices.')
+parser_registry.add_argument('--device', help='It name of device to inspect')
+parser_registry.set_defaults(func=handler_inspect) # change
+
 # Create a template for handler devices subcommand
-parser_action = subparsers.add_parser('handler', help='manage status of devices')
+parser_action = subparsers.add_parser('launch', help='manage status of devices')
 parser_action.add_argument('--action', help='select the action to devices start|stop|pause')
-parser_action.add_argument('--device', help='device name registry')
-parser_action.set_defaults(func=fnc_handler)
+parser_action.add_argument('--task', help='device name registry')
+parser_action.set_defaults(func=handler_launch)
 
 # Create a template for change devices subcommand
 parser_change = subparsers.add_parser('change', help='change running time the time to push data')
@@ -78,11 +89,8 @@ parser_change.add_argument('--value', help='value to change setinterval')
 parser_change.add_argument('--task', help='task id celery')
 parser_change.set_defaults(func=fnc_change)
 
-# Create a template for active devices subcommand
-parser_active = subparsers.add_parser('active', help='show all tasks or devices active')
-parser_active.add_argument('--type', help='select the type task|dev')
-parser_active.set_defaults(func=fnc_active)
 
+# handler_inspect
 
 if len(sys.argv) <= 1:
     sys.argv.append('--help')

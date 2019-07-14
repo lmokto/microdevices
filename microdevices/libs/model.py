@@ -44,6 +44,7 @@ class TableRegistry(Base):
 
     id = Column(Integer, primary_key=True)
     device = Column(String)
+    path = Column(String)
     interval = Column(String)
     task = Column(String)
     fnc = Column(String)

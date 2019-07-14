@@ -70,10 +70,28 @@ def verify_devices(dev):
     try:
         from microdevices import factory
     except:
-        raise ValueError('microdeivces.factory not found')
+        raise ValueError('microdevices factory not found')
     else:
         modules = dir(factory)
         if dev in modules:
+            return True
+        return False
+
+
+def verify_task(task, dev):
+    """
+    :param task: dev1_task_consumption
+    :param dev: dev1
+    :return: True
+    """
+    try:
+        import microdevices.factory
+        devices = getattr(microdevices.factory, dev)
+    except:
+        raise ValueError('microdevices factory not found')
+    else:
+        functions = dir(devices)
+        if task in functions:
             return True
         return False
 
@@ -89,11 +107,29 @@ def return_registry(dev):
     return registry
 
 
+def filter_tasks(device, session):
+    """
+    :param device:
+    :param session:
+    :return:
+    """
+    filter_dev = []
+    try:
+        devices = session.query(TableRegistry).filter_by(device=device)
+        for dev in devices:
+            filter_dev.append(dev.__dict__)
+    except:
+        session.rollback()
+    finally:
+        print(filter_dev)
+        return filter_dev
+
+
 def insert_tasks(locate, session):
     """
-    :param args:
-    :param kwargs:
-    :return:
+    :param locate: 'factory.dev1.registry'
+    :param session: session
+    :return: [{..},{...}]
     """
     module = locate_registry(locate)
     assert verify_devices(module)
@@ -106,6 +142,7 @@ def insert_tasks(locate, session):
             for task in _tasks:
                 registry = TableRegistry(
                     device=_name,
+                    path=locate,
                     interval=task['interval'],
                     task=None,
                     fnc=task['fnc'].name,
@@ -122,7 +159,99 @@ def insert_tasks(locate, session):
 
 
 def handler_registry(args, session):
-    insert_tasks(args.locate, session)
+    """
+    :param args:
+    :param session:
+    :return:
+    """
+    session_add = insert_tasks(args.registry, session)
+    return session_add
+
+
+def handler_launch(args, session):
+    """
+    :param args:
+    :param session:
+    :return:
+    """
+    resp = None
+    if args.action == 'start':
+        resp = start_task(args.task, session)
+    elif args.action == 'stop':
+        resp = stop_task(args.task, session)
+    elif args.action == 'pause':
+        resp = pause_task(args.task, session)
+    return resp
+
+
+def get_task(registries, fnc):
+    """
+    :param registries:
+    :param fnc:
+    :return:
+    """
+    for devices in registries:
+        _tasks = devices['tasks']
+        for _task in _tasks:
+            if _task['fnc'].name == fnc:
+                return _task['fnc']
+    return False
+
+
+def start_task(_id, session):
+    """
+    :param _id:
+    :param session:
+    :return:
+        1. verificar que este registrada + inactiva
+        2. verificar que la tarea este en el modulo
+        3. verificar que este en celery
+        4. iniciar
+        5. cambiar estado y actualizar id
+
+    """
+    try:
+        task = session.query(TableRegistry).filter_by(id=_id, status='inactive').first()
+        registries = return_registry(task.device)
+        invoke_task = get_task(registries, task.fnc)
+        result = invoke_task.delay()
+        response = update_task(session, _id, **{'status': 'active', 'task': result.id})
+        return response
+    except:
+        return False
+
+
+def stop_task(_id, session):
+    pass
+
+
+def pause_task(_id, session):
+    pass
+
+
+def update_task(session, _id, **kwargs):
+    """
+    :param session: session
+    :param _id: 3
+    :param kwargs: {'status': 'active'}
+    :return:
+    """
+    task = session.query(TableRegistry).filter_by(id=_id).first()
+    assert task
+    for k, v in kwargs.items():
+        setattr(task, k, v)
+    session.commit()
+    return task
+
+
+def handler_inspect(args, session):
+    """
+    :param args:
+    :param session:
+    :return:
+    """
+    session_get = filter_tasks(args.device, session)
+    return session_get
 
 
 def fnc_handler(args):
@@ -141,5 +270,10 @@ def fnc_active(args):
 
 
 def init_database(args, session=None):
+    """
+    :param args:
+    :param session:
+    :return:
+    """
     main()
     print('start database', args)

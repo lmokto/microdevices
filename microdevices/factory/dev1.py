@@ -51,10 +51,10 @@ def dev1_task_voltage():
 
 registry = [{
     'id': dev.get_id(),
-    'class': dev, # guardar referencia de importacion
+    'class': dev,
     'tasks': [{
         'status': 'inactive',
-        'fnc': dev1_task_consumption, # guardar referencia de llamada
+        'fnc': dev1_task_consumption,
         'interval': WAIT_TASK_CONS,
     },{
         'status': 'inactive',
