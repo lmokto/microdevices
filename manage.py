@@ -55,7 +55,6 @@ session = Session()
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
 
-
 # Create a template for active devices subcommand
 # python manage.py start_db
 
@@ -68,14 +67,14 @@ parser_active.set_defaults(func=init_database)
 
 parser_registry = subparsers.add_parser('factory', help='It provide an interface to register devices.')
 parser_registry.add_argument('--registry', help='relative path registry dict')
-parser_registry.set_defaults(func=handler_registry) # change
+parser_registry.set_defaults(func=handler_registry)  # change
 
 # python manage.py inspect --device='dev2'
 # python manage.py inspect --device='dev1'
 
 parser_registry = subparsers.add_parser('inspect', help='It provide an interface to inspect devices.')
 parser_registry.add_argument('--device', help='It name of device to inspect')
-parser_registry.set_defaults(func=handler_inspect) # change
+parser_registry.set_defaults(func=handler_inspect)  # change
 
 # Create a template for handler devices subcommand
 parser_action = subparsers.add_parser('launch', help='manage status of devices')
@@ -88,7 +87,6 @@ parser_change = subparsers.add_parser('change', help='change running time the ti
 parser_change.add_argument('--value', help='value to change setinterval')
 parser_change.add_argument('--task', help='task id celery')
 parser_change.set_defaults(func=fnc_change)
-
 
 # handler_inspect
 

@@ -17,6 +17,8 @@ dev.add(voltage)
 
 WAIT_TASK_CONS = 5
 WAIT_TASK_VOLT = 2
+
+
 # Emitimos datos segun sensor
 
 @app.task(name='factory.dev1.dev1_task_consumption')
@@ -56,7 +58,7 @@ registry = [{
         'status': 'inactive',
         'fnc': dev1_task_consumption,
         'interval': WAIT_TASK_CONS,
-    },{
+    }, {
         'status': 'inactive',
         'fnc': dev1_task_voltage,
         'interval': WAIT_TASK_VOLT,

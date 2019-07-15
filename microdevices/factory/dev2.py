@@ -55,10 +55,10 @@ registry = [{
     'tasks': [{
         'fnc': dev2_task_consumption,
         'interval': WAIT_TASK_CONS,
-        'status':'inactive'
+        'status': 'inactive'
     }, {
         'fnc': dev2_task_voltage,
         'interval': WAIT_TASK_VOLT,
-        'status':'inactive'
+        'status': 'inactive'
     }]
 }]

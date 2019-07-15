@@ -13,7 +13,6 @@ Base = declarative_base()
 
 
 class TableDevices(Base):
-
     __tablename__ = 'devices'
 
     id = Column(Integer, primary_key=True)
@@ -21,6 +20,8 @@ class TableDevices(Base):
 
     def __repr__(self):
         return "<Device(id='%s', name='%s')>" % (self.id, self.name)
+
+
 """
 [{
     'id': 581664338,
@@ -39,6 +40,8 @@ class TableDevices(Base):
 }]
 
 """
+
+
 class TableRegistry(Base):
     __tablename__ = 'registry'
 
