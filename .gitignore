@@ -1,0 +1,9 @@
+devices/__pycache__/
+microdevices/libs/__pycache__/
+.idea/
+.idea/workspace.xml
+.directory
+config.ini
+__pycache__
+.idea/modules.xml
+microdevices.db
